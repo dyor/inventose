@@ -1,0 +1,97 @@
+﻿@using System.Collections.Generic
+@using Microsoft.AspNetCore.Http
+@using Microsoft.AspNetCore.Http.Authentication
+@model LoginRegisterViewModel
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    ViewData["Title"] = "Welcome to Inventose";
+}
+    <div style="width:350px; float:left; padding: 25px" class="dl-horizontal alert alert-info">
+        @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { id = "registerForm" }))
+        {
+            <h2>Create Free Account</h2>
+            @*<div asp-validation-summary="All" class="text-danger"></div>*@
+            <div class="form-group">
+                <label asp-for="RegisterViewModel.Email" class="col-md-2 control-label"></label>
+                <div class="col-md-pull-10">
+                    <input asp-for="RegisterViewModel.Email" class="form-control" />
+                    <span asp-validation-for="RegisterViewModel.Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="RegisterViewModel.Password" class="col-md-2 control-label"></label>
+                <div class="col-md-pull-10">
+                    <input asp-for="RegisterViewModel.Password" class="form-control" />
+                    <span asp-validation-for="RegisterViewModel.Password" class="text-danger"></span>
+                </div>
+            </div>
+            @*<div class="form-group">
+                    <label asp-for="RegisterViewModel.ConfirmPassword" class="col-md-10 control-label"></label>
+                    <div class="col-md-pull-10">
+                        <input asp-for="RegisterViewModel.ConfirmPassword" class="form-control" />
+                        <span asp-validation-for="RegisterViewModel.ConfirmPassword" class="text-danger"></span>
+                    </div>
+                </div>*@
+            <input type="hidden" name="ReturnUrl" value="@Context.Request.Query["ReturnUrl"]" />
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-lg">Register</button>
+                </div>
+            </div>
+            //@Html.EditorFor(m => Model.RegisterViewModel)
+            //<br/>
+            //<input type="submit" value="Join" class="btn btn-lg" />
+
+        }
+    </div>
+
+    <div style="width:350px; float:left; padding: 25px">
+    @using (Html.BeginForm("Login", "Account", FormMethod.Post, new { id = "loginForm" }))
+    {
+        <h2>Log In</h2>
+        //@Html.EditorFor(m => Model.LoginViewModel)
+        <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="LoginViewModel.Email" class="col-md-2 control-label" style="width: 300px"></label>
+                <div class="col-md-pull-10">
+                    <input asp-for="LoginViewModel.Email" class="form-control" autofocus />
+                    <span asp-validation-for="LoginViewModel.Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <label asp-for="LoginViewModel.Password" class="col-md-2 control-label"></label> <a href="/account/forgotpassword" style="position:relative; left:40px" tabindex="-1">Forgot Password</a>
+                <div class="col-md-pull-10">
+                    <input asp-for="LoginViewModel.Password" class="form-control" />
+                    <span asp-validation-for="LoginViewModel.Password" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <button type="submit" class="btn btn-lg">Log in</button>
+                </div>
+            </div>
+                <div class="form-group">
+                    <div class="col-md-10">
+                        <div class="checkbox" style="padding:17px">
+                            <label asp-for="LoginViewModel.RememberMe">
+                                <input asp-for="LoginViewModel.RememberMe" checked />
+                                @Html.DisplayNameFor(m => m.LoginViewModel.RememberMe)
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            
+
+
+                <input type="hidden" name="ReturnUrl" value="@Context.Request.Query["ReturnUrl"]" />
+
+                <br />
+        }
+    </div>
+    <div style="clear: both">
+    </div>
+
+    @section Scripts {
+        @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    }

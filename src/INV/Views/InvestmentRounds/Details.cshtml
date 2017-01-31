@@ -1,0 +1,90 @@
+@model INV.Models.InvestmentRound
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>Investment Round Details</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Invention.Title)
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.Invention.Title, "Details", "Inventions", new { id = Model.InventionID }, null)
+        </dd>
+    </dl>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Invention.ApplicationUser.UserName)
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.Invention.ApplicationUser.UserName, "Details", "ApplicationUsers", new { id = Model.Invention.ApplicationUserId }, null)
+        </dd>
+    </dl>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ExpertService.Title)
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.ExpertService.Title, "Details", "ExpertServices", new {  id = Model.ExpertServiceID})
+            
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.RaiseAmount)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.RaiseAmount)
+        </dd>
+        </dl>
+    <hr />
+        
+    <dl class="dl-horizontal">
+        <dt>
+            Investors
+        </dt>
+        @if (Model.Investments.Count == 0)
+        {
+            <dd>
+                This round does not have any investors. 
+                @if (ViewData["isEditable"].ToString() == "true")
+                {
+                    <text>
+                    You can either <a asp-action='Delete' asp-route-id='@Model.ID'>Delete</a>  or <a asp-action='Edit' asp-route-id='@Model.ID'>Reopen</a> this round.
+                    </text>
+                }
+            </dd>
+        }
+        @foreach (Investment i in Model.Investments)
+        {
+
+            <dd>
+                @i.ApplicationUser.UserName
+
+                @i.InvestmentAmount
+                @*@Html.ActionLink(string.Format("Title: {0} | Open for Funding: {1}", i.Title, i.IsOpenForFunding), "Details", "InvestmentRounds", new { id = i.ID }, null)*@
+            </dd>
+        }
+    </dl>
+</div>
+<div>
+@if (ViewData["isEditable"].ToString() == "true")
+{
+    <a asp-action="Edit" asp-route-id="@Model.ID">Edit</a> 
+}
+</div>

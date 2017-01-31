@@ -1,0 +1,61 @@
+@model INV.Models.ExpertService
+
+@{
+    ViewData["Title"] = @Model.Title;
+}
+
+<h2>@Model.Title</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.ApplicationUser.UserName, "Details", "ApplicationUsers", new { id = Model.ApplicationUserId })
+        </dd>
+    </dl>
+    <hr />
+
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.Cost)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Cost)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.MaxDaysToComplete)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.MaxDaysToComplete)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.ServiceType.Title)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.ServiceType.Title)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LongDescription)
+        </dt>
+        <dd>
+            @Html.Raw(Model.LongDescription)
+        </dd>
+
+    </dl>
+</div>
+<div>
+    <a href="mailto:@Model.ApplicationUser.Email" class="btn btn-default">Purchase this Service</a>
+    @Html.ActionLink("Raise Money for this Service", "Invest", new {Id=Model.ID }, new { @class = "btn btn-default" }) 
+    @Html.ActionLink("Learn More about this Expert", "Details", "ApplicationUsers", new { id = Model.ApplicationUserId }, new { @class = "btn btn-default" })
+
+    <br /><br />
+    @if (ViewData["isEditable"].ToString() == "true")
+    {
+
+        @Html.ActionLink("Edit", "Edit", new { Id = Model.ID });
+        <text> | </text>
+    }
+    <a asp-action="Index">Back to Experts</a>
+</div>

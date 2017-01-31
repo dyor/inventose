@@ -1,0 +1,59 @@
+@model IEnumerable<INV.Models.ExpertService>
+
+@{
+    //ViewData["Title"] = "Index";
+}
+
+<h2>@ViewData["Title"]</h2>
+[@Html.ActionLink("Patent Attorneys", "Patent")]
+[@Html.ActionLink("Prototype Builders", "Prototype")]
+[@Html.ActionLink("All Experts", "Index")]
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MaxDaysToComplete)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ServiceType.Title)
+            </th>
+            
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ID">@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.MaxDaysToComplete)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ServiceType.Title)
+            </td>
+
+            <td>
+                @Html.DisplayFor(model => item.ApplicationUser.UserName)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+
+<p>
+    If you would like to offer your services to the Inventose community, <a asp-action="Create">create a listing</a>.
+</p>

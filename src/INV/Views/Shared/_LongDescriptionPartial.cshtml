@@ -1,0 +1,59 @@
+﻿<!-- Include stylesheet -->
+<link href="https://cdn.quilljs.com/1.1.7/quill.snow.css" rel="stylesheet">
+<style>
+    .ql-snow {
+        width: 550px;
+    }
+</style>
+<!-- Create the editor container -->
+<div id="LongDescriptionShadow" style="height:200px; width:550px"></div>
+
+<!-- Include the Quill library -->
+<script src="https://cdn.quilljs.com/1.1.7/quill.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        var ldText = $("#LongDescription").val();
+
+        quill.pasteHTML(0, ldText, '', true);
+        //keep hiddent text field in sync with Quill content
+        quill.on('text-change', function (delta, source) {
+            $("#LongDescription").val($(".ql-editor").html());
+        });
+        //prevent Quill controls from receiving tab focus
+        $(".ql-toolbar").find(":button").attr('tabindex', '-1');
+
+    });
+</script>
+<!-- Initialize Quill editor -->
+<script>
+    var toolbarOptions = [
+        ['bold', 'italic', 'underline', 'strike'],
+        ['blockquote', 'code-block'],
+        [{ 'header': 1 }, { 'header': 2 }],
+        [{ 'list': 'ordered' }, { 'list': 'bullet' }],
+        [{ 'indent': '-1' }, { 'indent': '+1' }],
+        [{ 'direction': 'rtl' }],
+        ['link', 'image']
+    ];
+    //keyboard module prevents tabbing in Quill, and instead tabs to next field
+    var quill = new Quill('#LongDescriptionShadow', {
+        modules: {
+            toolbar: toolbarOptions,
+            keyboard: {
+                bindings: {
+                    tab: {
+                        key: 9,
+                        handler: function () {
+                            var inputs = $("#LongDescriptionShadow").closest('form').find(':input');
+                            inputs.eq(inputs.index(this) + 19).focus();
+                        }
+                    }
+                }
+            },
+        },
+
+        theme: 'snow'
+    });
+</script>

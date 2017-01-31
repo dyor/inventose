@@ -1,0 +1,131 @@
+@model INV.Models.Invention
+
+@{
+    //ViewData["Title"] = "Edit";
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<form asp-action="Edit">
+    <div class="form-horizontal">
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="ID" />
+        <div class="form-group">
+            <label asp-for="Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="LongDescription" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LongDescription" type="hidden" />
+                @await Html.PartialAsync("_LongDescriptionPartial")
+
+                <span asp-validation-for="LongDescription" class="text-danger" > </span>
+                <span>
+                    Describe how your investors will get their money back + a good return. <a href="#" data-html="true" data-toggle="tooltip" title="<ol style='align:left'><li>If your invention is not currently ready for sale, describe how you will refine your invention (e.g., prototypes + patents).</li><li>Do: Provide enough information to intrigue investors. Do not: disclose patentable (and not yet patented) subject matter.</li><li>Describe all refinements you have already made to the invention, and include pictures and links.</li></ol>">Pro tips</a>
+                </span>
+                <script>
+                    $(document).ready(function () {
+                        $('[data-toggle="tooltip"]').tooltip();
+                        $("#Title").focus();
+                    });
+                </script>
+                <style>
+                    .tooltip-inner {
+                       text-align: left;
+                       }
+                </style>
+                @if (TempData["isNew"] != null)
+                {
+                <h3 class="alert alert-info">Sample Plan</h3>
+                <div >
+                    <div>
+                        I plan to sell this invention to Company X for $15,000 by having an invention strategy WORKSHOP, creating one invention PROTOTYPE, and filing a non-provisional PATENT application.
+                    </div>
+                    <ul>
+                        <li>Total cost to refine the invention (WORKSHOP + PROTOTYPE + PATENT FILING): ~$9,000</li>
+                        <li>Initial Investment: $500</li>
+                        <li>Projected Return for Initial Investors: ~$1,000</li>
+                        <li>Projected Time to Sell: 12 months from Initial Investment</li>
+                        <li>More Details: see the complete plan at <a href="http://bit.ly/2jmVI3p">http://bit.ly/2jmVI3p</a></li>
+
+                    </ul>
+                </div>    
+                }            
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Valuation" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Valuation" class="form-control" />
+                <span asp-validation-for="Valuation" class="text-danger"></span>
+                <span>
+                    @if (TempData["isNew"] != null)
+                    {
+                        
+                            <a href="#" data-html="true" data-toggle="tooltip" title="<ul>@String.Format("<li>You are raising {0:C} to cover the cost of the {1}.</li><li>A common practice is a pre-money valuation of {2:C}, which will result in a post-money valuation of {3:C} and your investors getting 20% equity in your invention.</li><li>Set the valuation at a point that will excite investors (aka-they will make meaingful, risk-worthy money when you sell) AND will give you the equity you need to see your invention through.</li><li>You are free to set your pre-money valuation of your invention to whatever amount you think it is worth.</li>", Model.Valuation / 4, Model.InvestmentRounds.First().ExpertService.Title, Model.Valuation, Model.Valuation * 5 / 4)</ul>">Pro tips</a>
+                        
+                    }
+                </span>
+            </div>
+        </div>
+        @if (TempData["isNew"] == null)
+        {
+            @if (Model.IsOpenForFunding!=true)
+            { 
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <div class="checkbox">
+                        <input asp-for="IsForSale" />
+                        <label asp-for="IsForSale"></label>
+                    </div>
+                </div>
+            </div>
+            }
+            <input hidden asp-for="IsOpenForFunding" />
+        @*<div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="IsOpenForFunding" />
+                    <label asp-for="IsOpenForFunding"></label>
+                </div>
+            </div>
+        </div>*@
+        }
+        else {
+            <input hidden asp-for="IsOpenForFunding" />
+        }
+        @*<div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="IsPublished" />
+                    <label asp-for="IsPublished" title="Publish?">Publish?</label>
+                </div>
+            </div>
+        </div>*@
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save as Draft" class="btn btn-default" /> <input type="submit" value="Save and Publish" class="btn btn-default" name="published" /> <a asp-action="Delete" class="btn btn-default"  asp-route-id="@Model.ID">Delete</a>
+                <br /><br />
+                <div style="clear:both" class="alert alert-warning">
+                    If you Save as Draft, only you can see this Invention. If you Save and Publish, the Invention will be visible by other people.
+                </div>
+            </div>
+            
+        </div>
+        
+    </div>
+</form>
+<hr/>
+<div>
+    <a asp-action="Delete" asp-route-id="@Model.ID">Delete</a> | 
+    <a asp-action="Details" asp-route-id="@Model.ID">Cancel</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

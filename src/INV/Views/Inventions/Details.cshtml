@@ -1,0 +1,270 @@
+@model INV.Models.Invention
+@using Microsoft.AspNetCore.Identity
+
+@inject SignInManager<ApplicationUser> SignInManager
+@inject UserManager<ApplicationUser> UserManager
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<h2>@Model.Title</h2>
+
+<div>
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+        </dt>
+        <dd>
+            @Html.ActionLink(Model.ApplicationUser.UserName, "Details", "ApplicationUsers", new { id = Model.ApplicationUserId }, null)
+        </dd>
+    </dl>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.LongDescription)
+        </dt>
+        <dd>
+            @Html.Raw(Model.LongDescription)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.DateCreated)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.DateCreated)
+        </dd>
+        @if (Model.IsForSale)
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.IsForSale)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IsForSale)
+            </dd>
+        }
+        @*<dt>
+                @Html.DisplayNameFor(model => model.IsOpenForFunding)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IsOpenForFunding)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.IsPublished)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.IsPublished)
+            </dd>
+            <dt>
+                @Html.DisplayNameFor(model => model.Valuation)
+            </dt>
+            <dd>
+                @Html.DisplayFor(model => model.Valuation)
+            </dd>*@
+
+    </dl>
+    <hr/>
+    <h2> Promote This Invention:  </h2>
+    @{
+        var host = @Context.Request.Host;
+        var twitterLink = @String.Format("https://twitter.com/home?status={0}%20{1}/Inventions/Details/{2}", Uri.EscapeDataString("Check out this invention: " + Model.Title), host, Model.ID);
+        var linkedinLink = @String.Format("https://www.linkedin.com/shareArticle?mini=true&url={1}/Inventions/Details/{2}&title={0}&summary=&source=", Uri.EscapeDataString("Check out this invention: " + Model.Title), host, Model.ID);
+        var facebookLink = @String.Format("https://www.facebook.com/sharer/sharer.php?u={1}/Inventions/Details/{2}", Uri.EscapeDataString("Check out this invention: " + Model.Title), host, Model.ID);
+    }
+    <a href="@twitterLink" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i> Share on Twitter</a> |
+    <a href="@linkedinLink" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i> Share on LinkedIn</a> |
+    <a href="@facebookLink" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i> Share on Facebook</a>
+
+
+    @{
+        //this handles open rounds
+        if (Model.InvestmentRounds.Count > 0 && !SignInManager.IsSignedIn(User))
+        {
+            <br />
+            <h2>Sign In Required</h2>
+            <br />
+            <span class="dl-horizontal alert alert-info">
+                There is more information available for this invention, but you must be signed in to see it. You can <a asp-action="Login" asp-controller="Account" asp-route-returnurl="/Inventions/Details/@Model.ID">Create an Account or Log In</a> 
+                to gain access to this additional information. 
+            </span>
+            <br /><br /><br /><br />
+        }
+        if (Model.InvestmentRounds.Count > 0 && SignInManager.IsSignedIn(User))
+        {
+            var openRoundCount = Model.InvestmentRounds.Where(ir => ir.IsOpenForFunding == true).Count();
+            if (openRoundCount > 0 && Model.IsOpenForFunding == true)
+            {
+
+                InvestmentRound investmentRound = Model.InvestmentRounds.Where(ir => ir.IsOpenForFunding == true).First();
+                if (TempData["invested"] != null && TempData["invested"].ToString() == "true")
+                {
+                    <h2>Want to Invest? </h2>
+                    <dl class="dl-horizontal alert alert-info">
+                        Awesome! Your request to invest is submitted, and you will be notified by the inventor if the round closes and you are part of it.
+                    </dl>
+                }
+                else
+                {
+
+
+                    @if (investmentRound.Investments.Count > 0)
+                {
+                        <hr/>
+                        <h2>Investor Team</h2>
+                        <dl class="dl-horizontal">
+                            <dt>
+                                Investors
+                            </dt>
+                            @foreach (Investment i in investmentRound.Investments)
+                {
+
+                                <dd>
+
+                                    @Html.ActionLink(i.ApplicationUser.UserName, "Details", "ApplicationUsers", new { id = i.ApplicationUserId }, null)
+
+                                    @String.Format("{0:C}", i.InvestmentAmount)
+                                    @*@Html.ActionLink(string.Format("Title: {0} | Open for Funding: {1}", i.Title, i.IsOpenForFunding), "Details", "InvestmentRounds", new { id = i.ID }, null)*@ &nbsp;
+                                </dd>
+                            }
+                            <dt>
+                                Total Committed
+                            </dt>
+                            <dd>
+                                @String.Format("{0:C}", investmentRound.Investments.Sum(i => i.InvestmentAmount))
+                            </dd>
+
+                        </dl>
+                    }
+                    <hr />
+                    <h2>Want to Invest? </h2>
+                        <dl class="dl-horizontal alert alert-info">
+                            <dt>
+                                Inventor is Raising
+                            </dt>
+                            <dd>
+                                @String.Format("{0:C}", investmentRound.RaiseAmount)
+                                <br /><br />
+                            </dd>
+                            <dt>
+                                Use of Funds
+                            </dt>
+                            <dd>
+                                @*Logic: if this is DIY funding where inventor and expert id are equal AND the web visitor is not the inventor, do not link to the expertservice*@
+                                @if (investmentRound.Invention.ApplicationUserId == investmentRound.ExpertService.ApplicationUserId && ViewData["isEditable"].ToString() != "true")
+                                {
+                                    @investmentRound.ExpertService.Title
+                                    <text> (NOTE: this is a DIY service where the inventor is serving as his/her own expert)</text>
+
+                                }
+                                else
+                                {
+                                    @Html.ActionLink(investmentRound.ExpertService.Title, "Details", "ExpertServices", new { id = investmentRound.ExpertServiceID }, new { target = "_blank" })
+
+                                }
+                                <br /><br />
+
+                            </dd>
+                            <dt>
+                                @{
+                                    var hundredPercentofRound = investmentRound.RaiseAmount;
+                                    var hundredPercentofRoundOwnership = hundredPercentofRound / (Model.Valuation + investmentRound.RaiseAmount);
+                                }
+                                Commit 100% of Round
+                            </dt>
+                            <dd>
+                                @Html.ActionLink(string.Format("{0:C}", hundredPercentofRound), "Invest", "InvestmentRounds", new { id = investmentRound.ID, investmentAmount = Convert.ToInt64(hundredPercentofRound) }, new { @class = "btn btn-default btn-lg" })<br />
+                                By clicking the button above, you are indicating you would like to invest up to @hundredPercentofRound, which represents @String.Format("{0:p}", hundredPercentofRoundOwnership) ownership of Invention. <br /><br />
+                            </dd>
+
+                            <dt>
+                                @{
+                                    var twentyFivePercentofRound = investmentRound.RaiseAmount / 4;
+                                    var twentyFivePercentofRoundOwnership = twentyFivePercentofRound / (Model.Valuation + investmentRound.RaiseAmount);
+                                }
+                                Commit 25% of Round
+                            </dt>
+                            <dd>
+                                @Html.ActionLink(string.Format("{0:C}", twentyFivePercentofRound), "Invest", "InvestmentRounds", new { id = investmentRound.ID, investmentAmount = Convert.ToInt64(twentyFivePercentofRound) }, new { @class = "btn btn-default btn-lg" })<br />
+                                By clicking the button above, you are indicating you would like to invest up to @twentyFivePercentofRound, which represents @String.Format("{0:p}", twentyFivePercentofRoundOwnership) ownership of Invention.<br /><br />
+                            </dd>
+
+                            <dt>
+                                @{
+                                    var tenPercentofRound = investmentRound.RaiseAmount / 10;
+                                    var tenPercentofRoundOwnership = tenPercentofRound / (Model.Valuation + investmentRound.RaiseAmount);
+                                }
+                                Commit 10%  of Round
+                            </dt>
+                            <dd>
+                                @Html.ActionLink(string.Format("{0:C}", tenPercentofRound), "Invest", "InvestmentRounds", new { id = investmentRound.ID, investmentAmount = Convert.ToInt64(tenPercentofRound) }, new { @class = "btn btn-default btn-lg" })<br />
+                                By clicking the button above, you are indicating you would like to invest up to @tenPercentofRound, which represents @String.Format("{0:p}", tenPercentofRoundOwnership) ownership of Invention.<br /><br />
+                            </dd>
+                            <dt>
+                                @{
+                                    var onePercentofRound = investmentRound.RaiseAmount / 100;
+                                    var onePercentofRoundOwnership = onePercentofRound / (Model.Valuation + investmentRound.RaiseAmount);
+                                }
+                                Commit 1%  of Round
+                            </dt>
+                            <dd>
+                                @Html.ActionLink(string.Format("{0:C}", onePercentofRound), "Invest", "InvestmentRounds", new { id = investmentRound.ID, investmentAmount = Convert.ToInt64(onePercentofRound) }, new { @class = "btn btn-default  btn-lg" })<br />
+
+                                By clicking the button above, you are indicating you would like to invest up to @onePercentofRound, which represents @String.Format("{0:p}", onePercentofRoundOwnership) ownership of Invention.<br /><br />
+                            </dd>
+                            @if (ViewData["isEditable"].ToString() == "true")
+                        {
+                                <dt></dt>
+                                <dd>
+
+                                    @Html.ActionLink("Edit/Close Investment Round", "Edit", "InvestmentRounds", new { Id = investmentRound.ID })
+                                </dd>
+
+
+                            }
+                        </dl>
+            }
+        }
+    }
+
+
+
+}
+
+
+
+    @{
+        //this handles past rounds
+        var closedRoundCount = 0;
+        if (Model.InvestmentRounds.Count > 0)
+        {
+            closedRoundCount = Model.InvestmentRounds.Where(ir => ir.IsOpenForFunding != true).Count();
+        }
+    }
+    @if (closedRoundCount > 0)
+    {
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Investment Round
+            </dt>
+            @foreach (InvestmentRound i in Model.InvestmentRounds)
+            {
+
+                <dd>
+                    @Html.ActionLink(string.Format("Title: {0}", i.Title), "Details", "InvestmentRounds", new { id = i.ID }, null)
+                </dd>
+            }
+        </dl>
+    }
+</div>
+
+<div>
+
+    @if (ViewData["isEditable"].ToString() == "true")
+    {
+
+        @Html.ActionLink("Edit Invention", "Edit", new { Id = Model.ID });
+        <text> | </text>
+    }
+    <a asp-action="Index">Back to Inventions</a>
+</div>

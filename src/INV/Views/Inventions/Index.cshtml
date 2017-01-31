@@ -1,0 +1,60 @@
+@model IEnumerable<INV.Models.Invention>
+
+@{
+
+//ViewData["Title"] = title;
+
+}
+
+<h2>@ViewData["Title"]</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.DateCreated)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsForSale)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IsOpenForFunding)
+            </th>
+
+            <th>
+                @Html.DisplayNameFor(model => model.ApplicationUser.UserName)
+            </th>
+
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                <a asp-action="Details" asp-route-id="@item.ID">@Html.DisplayFor(modelItem => item.Title)</a>
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DateCreated)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsForSale)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IsOpenForFunding)
+            </td>
+            
+            <td>
+                @Html.DisplayFor(modelItem => item.ApplicationUser.Email)
+            </td>
+
+
+        </tr>
+}
+    </tbody>
+</table>
+<p>
+    If you want to list your invention here, you can either view <a href="/ExpertServices/Patent">Patent Attorneys</a> and <a href="/ExpertServices/Prototype">Prototype Builders</a> to find the expert you want to help you advance your invention, or you can <a asp-action="Create">list an invention for sale</a>.
+</p>

@@ -1,0 +1,152 @@
+@model INV.Models.ApplicationUser
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h2>@Model.UserName</h2>
+
+<div>
+    <hr />
+    <dl class="dl-horizontal" style="float:left; width: 500px">
+        <dt>
+           Name
+        </dt>
+        <dd>
+            @String.Format("{0} {1}", Model.FirstName, Model.LastName)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.Email)
+        </dt>
+        <dd>
+            @Html.Raw(String.Format("<a href=\"mailto:{0}\">{0}</a>", Model.Email))
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.PhoneNumber)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.PhoneNumber)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.LinkedInURL)
+        </dt>
+        <dd>
+            @Html.Raw(String.Format("<a href=\"{0}\" target=\"_blank\">{0}</a>", Model.LinkedInURL))
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.TwitterURL)
+        </dt>
+        <dd>
+            @Html.Raw(String.Format("<a href=\"{0}\" target=\"_blank\">{0}</a>", Model.TwitterURL))
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.WebAddress)
+        </dt>
+        <dd>
+            @Html.Raw(String.Format("<a href=\"{0}\" target=\"_blank\">{0}</a>", Model.WebAddress))
+        </dd>
+        
+        <dt>
+            @Html.DisplayNameFor(model => model.LongDescription)
+        </dt>
+        <dd>
+            @Html.Raw(Model.LongDescription)
+        </dd>
+        
+    </dl>
+    </div>
+<div style="float:left;">
+    @if (Model.YouTubeIntro != null)
+    {
+        <iframe width="560" height="315" src="@String.Format(@Model.YouTubeIntro).Replace("https://www.youtube.com/watch?v=", "https://www.youtube.com/embed/")" frameborder="0" allowfullscreen></iframe>
+    }
+</div>
+<div style="clear:both">
+    @if (Model.Inventions != null && Model.Inventions.Count > 0)
+    {
+        @if (Model.Inventions.Where(i => i.IsPublished == true).Count() > 0)
+        {
+
+        <hr />
+            <dl class="dl-horizontal">
+                <dt>
+                    Published Inventions
+                </dt>
+                @foreach (Invention i in Model.Inventions.Where(i => i.IsPublished == true))
+                {
+
+                    <dd>
+                        @Html.ActionLink(string.Format("{0}", i.Title), "Details", "Inventions", new { id = i.ID }, null)
+                    </dd>
+                }
+            </dl>
+        }
+            @if (ViewData["isEditable"] != null && Model.Inventions.Where(i => i.IsPublished != true).Count() > 0)
+            {
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        Unpublished Inventions
+                    </dt>
+                    @foreach (Invention i in Model.Inventions.Where(i => i.IsPublished != true))
+                    {
+
+                        <dd>
+                            @Html.ActionLink(string.Format("{0}", i.Title), "Details", "Inventions", new { id = i.ID }, null)
+                        </dd>
+                    }
+                </dl>
+
+            }
+    }
+</div>
+<div style="clear:both">
+    @if (Model.ExpertServices != null && Model.ExpertServices.Count > 0)
+    {
+        @if (Model.ExpertServices.Where(i => i.IsPublished == true).Count() > 0)
+        {
+
+
+        <hr />
+        <dl class="dl-horizontal">
+            <dt>
+                Expert Services
+            </dt>
+            @foreach (ExpertService i in Model.ExpertServices.Where(i => i.IsPublished == true))
+            {
+
+                <dd>
+                    @Html.ActionLink(string.Format("{0}", i.Title), "Details", "ExpertServices", new { id = i.ID }, null)
+                </dd>
+            }
+        </dl>
+        }
+            @if (ViewData["isEditable"] != null && Model.ExpertServices.Where(i => i.IsPublished != true).Count() > 0)
+            {
+                <hr />
+                <dl class="dl-horizontal">
+                    <dt>
+                        Unpublished Expert Services
+                    </dt>
+                    @foreach (ExpertService i in Model.ExpertServices.Where(i => i.IsPublished != true))
+                    {
+
+                        <dd>
+                            @Html.ActionLink(string.Format("{0}", i.Title), "Details", "ExpertServices", new { id = i.ID }, null)
+                        </dd>
+                    }
+                </dl>
+
+            }
+    }
+</div>
+
+
+
+<div>
+    @if (ViewData["isEditable"] != null)
+    {
+
+        @Html.ActionLink("Edit", "Edit", new { Id = Model.Id });
+    }
+</div>

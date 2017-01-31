@@ -1,0 +1,74 @@
+@model INV.Models.ExpertService
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>Expert Service</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="LongDescription" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="LongDescription" type="hidden" />
+                @await Html.PartialAsync("_LongDescriptionPartial")
+                <span asp-validation-for="LongDescription" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Cost" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Cost" class="form-control" />
+                <span asp-validation-for="Cost" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="MaxDaysToComplete" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="MaxDaysToComplete" class="form-control" />
+                <span asp-validation-for="MaxDaysToComplete" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ServiceType" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="ServiceTypeID" class="form-control" asp-items="ViewBag.ServiceTypeID">
+                    <option value="">-- Select Service Type --</option>
+                </select>
+                <span asp-validation-for="ServiceType" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="IsPublished" />
+                    <label asp-for="IsPublished"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

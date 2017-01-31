@@ -1,0 +1,95 @@
+﻿@{
+    ViewData["Title"] = "Inventose : the Website for Inventors.";
+}
+
+<div id="myCarousel" class="carousel slide" data-ride="carousel" data-interval="6000">
+    <ol class="carousel-indicators">
+        <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+        <li data-target="#myCarousel" data-slide-to="1"></li>
+        <li data-target="#myCarousel" data-slide-to="2"></li>
+    </ol>
+    <div class="carousel-inner" role="listbox">
+        <div class="item active">
+            <img src="~/images/Logo2.png" alt="Package Management" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    I am an Inventor. I need to: <br/>
+                    <a class="btn btn-lg" href="ExpertServices/Patent">
+                        Patent My Invention
+                    </a>
+                    <a class="btn btn-lg" href="ExpertServices/Protype">
+                        Prototype My Invention
+                    </a>
+
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/Logo32.png" alt="Package Management" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    I am an Investor. I need to:<br />
+                    <a class="btn btn-lg" href="Inventions/Invest">
+                        Invest in an Invention
+                    </a>
+                    <a class="btn btn-lg" href="Inventions/Buy">
+                        Buy an Invention
+                    </a>
+
+                </p>
+            </div>
+        </div>
+        <div class="item">
+            <img src="~/images/Logo4.png" alt="Package Management" class="img-responsive" />
+            <div class="carousel-caption" role="option">
+                <p>
+                    I am an Expert. I need to:<br />
+                    <a class="btn btn-lg" href="ExpertServices/Create">
+                        Offer Patent Expert Services
+                    </a>
+                    <a class="btn btn-lg" href="ExpertServices/Create">
+                        Offer Protype Development Services
+                    </a>
+
+                </p>
+            </div>
+        </div>
+    </div>
+    <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>Inventors</h2>
+        <ul>
+            <li><a href="/ExpertServices/Patent">Find a Patent Expert</a></li>
+            <li><a href="/ExpertServices/Prototype">Find a Prototype Expert</a></li>
+            <li><a href="/Inventions/CreateDIY">Raise Money for Do-It-Yourself Prototyping</a></li>
+            <li><a href="/Inventions/CreateForSale">Sell My Invention</a></li>
+        </ul>
+    </div>
+    <div class="col-md-4">
+        <h2>Investors</h2>
+        <ul>
+        <li><a href="Inventions/Invest">Invest in an Invention</a></li>
+        <li><a href="Inventions/Buy">Buy an Invention</a></li>
+        </ul>
+ 
+    </div>
+    <div class="col-md-4">
+        <h2>Experts</h2>
+        <ul>
+            <li><a href="ExpertServices/CreatePatent">Offer Patent Attorney Services</a></li>
+            <li><a href="ExpertServices/CreatePrototype">Offer Prototype Buidling Services</a></li>
+            <li><a href="ExpertServices/CreateOther">Offer Other Expert Service</a></li>
+        </ul>
+    </div>
+</div>
+

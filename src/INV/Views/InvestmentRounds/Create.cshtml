@@ -1,0 +1,60 @@
+@model INV.Models.InvestmentRound
+
+@*@{
+    ViewData["Title"] = "Create";
+}*@
+
+<h2>Create</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <h4>InvestmentRound</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="DateCreated" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="DateCreated" class="form-control" />
+                <span asp-validation-for="DateCreated" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Title" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="Invention" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="InventionID" class="form-control" asp-items="ViewBag.InventionID">
+                    <option value="">-- Select Invention --</option>
+                </select>
+                <span asp-validation-for="Invention" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="ExpertService" class="col-md-2 control-label"></label>
+            <div class="col-md-10">
+                <select asp-for="ExpertServiceID" class="form-control" asp-items="ViewBag.ExpertServiceID">
+                    <option value="">-- Select Expert Service --</option>
+                </select>
+                <span asp-validation-for="ExpertService" class="text-danger" />
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
